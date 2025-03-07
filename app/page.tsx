@@ -1,101 +1,600 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Moon, Sun, User, Mail, Phone, MapPin, School, Briefcase, Users, FileText, Upload } from 'lucide-react'
+
+const formSchema = z.object({
+  // Personal Information
+  email: z.string().email({ message: "Inserisci un indirizzo email valido." }),
+  name: z.string().min(2, { message: "Il nome deve contenere almeno 2 caratteri." }),
+  surname: z.string().min(2, { message: "Il cognome deve contenere almeno 2 caratteri." }),
+  birth_date: z.string().min(1, { message: "La data di nascita è obbligatoria" }),
+  phone: z.string().min(1, { message: "Il numero di telefono è obbligatorio" }),
+  residency: z.string().min(1, { message: "La residenza è obbligatoria" }),
+  domiciliation: z.string().min(1, { message: "Il domicilio è obbligatorio" }),
+  resume: z.any().optional(),
+
+  // Academic Information
+  university: z.string().min(1, { message: "L'università è obbligatoria" }),
+  faculty: z.string().min(1, { message: "La facoltà è obbligatoria" }),
+  course: z.string().min(1, { message: "Il corso è obbligatorio" }),
+  curriculum_type: z.string().min(1, { message: "Il tipo di curriculum è obbligatorio" }),
+  course_year: z.string().min(1, { message: "L'anno di corso è obbligatorio" }),
+
+  // Areas of Interest
+  area_1: z.string().min(1, { message: "La prima area di preferenza è obbligatoria" }),
+  area_2: z.string().min(1, { message: "La seconda area di preferenza è obbligatoria" }),
+
+  // JESAP Questions
+  how_know_jesap: z.string().min(1, { message: "Seleziona come hai conosciuto JESAP" }),
+  why_jesap: z.string().min(10, { message: "Spiegaci perché vuoi unirti a JESAP" }),
+  why_area: z.string().min(10, { message: "Spiegaci perché hai scelto queste aree" }),
+  know_someone: z.string(),
+  je_italy_member: z.string(),
+})
+
+export default function ApplicationForm() {
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const router = useRouter()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      surname: "",
+      birth_date: "",
+      phone: "",
+      residency: "",
+      domiciliation: "",
+      resume: null,
+      university: "",
+      faculty: "",
+      course: "",
+      curriculum_type: "",
+      course_year: "",
+      area_1: "",
+      area_2: "",
+      how_know_jesap: "",
+      why_jesap: "",
+      why_area: "",
+      know_someone: "",
+      je_italy_member: "",
+    },
+  })
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Crea un oggetto FormData per inviare anche i file
+      const formData = new FormData();
+      
+      // Aggiungi tutti i campi al FormData
+      Object.entries(values).forEach(([key, value]) => {
+        // Gestisci il file separatamente
+        if (key === 'resume' && value instanceof File) {
+          formData.append('resume', value);
+        } else if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      });
+      
+      // Invia i dati all'API
+      const response = await fetch('/api/submit-application', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        router.push('/success');
+      } else {
+        router.push(`/error?message=${encodeURIComponent(result.message)}`);
+      }
+    } catch (error) {
+      console.error("Errore durante l'invio del form:", error);
+      router.push('/error?message=Si%20è%20verificato%20un%20errore%20durante%20l%27invio%20del%20form');
+    }
+  }
+
+  const inputStyles = `px-4 h-12 text-lg ${
+    isDarkMode
+      ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
+      : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
+  } backdrop-blur-sm transition-all duration-200`
+
+  const labelStyles = `text-lg mb-2 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
+
+  const sectionStyles = `text-2xl font-semibold mb-6 ${isDarkMode ? "text-purple-100" : "text-purple-800"}`
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main
+      className={`min-h-screen ${isDarkMode ? "dark bg-purple-950" : "bg-gradient-to-br from-purple-50 to-indigo-100"}`}
+    >
+      {/* Background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[10%] left-[5%] w-[40rem] h-[40rem] bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-[20%] right-[10%] w-[35rem] h-[35rem] bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-[10%] left-[20%] w-[45rem] h-[45rem] bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Dark mode toggle */}
+      <button
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors ${
+          isDarkMode
+            ? "bg-purple-800 text-yellow-200"
+            : "bg-white/30 backdrop-blur-sm text-purple-700 hover:bg-white/40"
+        }`}
+        aria-label="Toggle dark mode"
+      >
+        {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </button>
+
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-2 mb-12 text-center">
+            <h1 className={`text-5xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-purple-900"}`}>
+              Modulo di Candidatura JESAP
+            </h1>
+            <p className={`text-xl ${isDarkMode ? "text-purple-200" : "text-purple-700"}`}>
+              Unisciti al nostro team e fai la differenza
+            </p>
+            <div className={`text-sm ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>
+              Versione 10.0
+            </div>
+          </div>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
+              {/* Personal Information Section */}
+              <div className="space-y-6">
+                <h2 className={sectionStyles}>
+                  <User className="inline-block mr-2 mb-1" /> Informazioni Personali
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>
+                          <Mail className="w-5 h-5" /> Email
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="your.email@example.com" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Nome</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Il tuo nome" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="surname"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Cognome</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Il tuo cognome" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="birth_date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Data di Nascita</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="resume"
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel className={labelStyles}>
+                          <FileText className="w-5 h-5" /> Carica il tuo CV
+                        </FormLabel>
+                        <FormControl>
+                          <div className={`${inputStyles} flex items-center gap-4 rounded-md`}>
+                            <Input
+                              type="file"
+                              accept=".pdf,.doc,.docx"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                onChange(file)
+                              }}
+                              {...field}
+                              className="hidden"
+                              id="resume-upload"
+                            />
+                            <label
+                              htmlFor="resume-upload"
+                              className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer ${
+                                isDarkMode
+                                  ? "bg-purple-800 hover:bg-purple-700 text-white"
+                                  : "bg-purple-100 hover:bg-purple-200 text-purple-700"
+                              }`}
+                            >
+                              <Upload className="w-5 h-5" /> Scegli File
+                            </label>
+                            <span className={isDarkMode ? "text-purple-300" : "text-purple-600"}>
+                              {value ? (value as File).name : "Nessun file selezionato"}
+                            </span>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Contact Information Section */}
+              <div className="space-y-6">
+                <h2 className={sectionStyles}>
+                  <Phone className="inline-block mr-2 mb-1" /> Informazioni di Contatto
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Numero di Telefono</FormLabel>
+                        <FormControl>
+                          <Input placeholder="+39 123 456 7890" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="residency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>
+                          <MapPin className="w-5 h-5" /> Residenza
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Il tuo indirizzo di residenza" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="domiciliation"
+                    render={({ field }) => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel className={labelStyles}>Domicilio</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Il tuo indirizzo di domicilio" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Academic Information Section */}
+              <div className="space-y-6">
+                <h2 className={sectionStyles}>
+                  <School className="inline-block mr-2 mb-1" /> Informazioni Accademiche
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="university"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Università</FormLabel>
+                        <FormControl>
+                          <Input placeholder="La tua università" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="faculty"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Facoltà</FormLabel>
+                        <FormControl>
+                          <Input placeholder="La tua facoltà" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="course"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Corso</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Il tuo corso" {...field} className={inputStyles} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="curriculum_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Tipo di Curriculum</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona il tipo di curriculum" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="bachelor">Laurea Triennale</SelectItem>
+                            <SelectItem value="master">Laurea Magistrale</SelectItem>
+                            <SelectItem value="phd">Dottorato</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="course_year"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Anno di Corso</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona l'anno" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="1">1° Anno</SelectItem>
+                            <SelectItem value="2">2° Anno</SelectItem>
+                            <SelectItem value="3">3° Anno</SelectItem>
+                            <SelectItem value="4">4° Anno</SelectItem>
+                            <SelectItem value="5">5° Anno</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Areas of Interest Section */}
+              <div className="space-y-6">
+                <h2 className={sectionStyles}>
+                  <Briefcase className="inline-block mr-2 mb-1" /> Aree di Interesse
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="area_1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Area Numero 1</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la prima preferenza" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="marketing">Marketing</SelectItem>
+                            <SelectItem value="hr">Risorse Umane</SelectItem>
+                            <SelectItem value="it">Information Technology</SelectItem>
+                            <SelectItem value="finance">Finanza</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="area_2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Area Numero 2</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la seconda preferenza" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="marketing">Marketing</SelectItem>
+                            <SelectItem value="hr">Risorse Umane</SelectItem>
+                            <SelectItem value="it">Information Technology</SelectItem>
+                            <SelectItem value="finance">Finanza</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* JESAP Questions Section */}
+              <div className="space-y-6">
+                <h2 className={sectionStyles}>
+                  <Users className="inline-block mr-2 mb-1" /> Domande JESAP
+                </h2>
+                <div className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="how_know_jesap"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Come hai conosciuto JESAP?</FormLabel>
+                        <FormControl>
+                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="online" id="jesap-online" />
+                              <label htmlFor="jesap-online" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                Online (Social Media, Sito Web, ecc.)
+                              </label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="offline" id="jesap-offline" />
+                              <label htmlFor="jesap-offline" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                Offline (Eventi, Passaparola, ecc.)
+                              </label>
+                            </div>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="why_jesap"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Perché vuoi unirti a JESAP?</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Raccontaci la tua motivazione per unirti a JESAP"
+                            {...field}
+                            className={`${inputStyles} min-h-[100px]`}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="why_area"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Perché hai scelto queste aree?</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Spiega perché hai scelto queste aree"
+                            {...field}
+                            className={`${inputStyles} min-h-[100px]`}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="know_someone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Conosci qualcuno in JESAP?</FormLabel>
+                        <FormControl>
+                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="yes" id="know-yes" />
+                              <label htmlFor="know-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                Sì
+                              </label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="no" id="know-no" />
+                              <label htmlFor="know-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                No
+                              </label>
+                            </div>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="je_italy_member"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyles}>Sei un membro di JE Italy?</FormLabel>
+                        <FormControl>
+                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="yes" id="je-yes" />
+                              <label htmlFor="je-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                Sì
+                              </label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="no" id="je-no" />
+                              <label htmlFor="je-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
+                                No
+                              </label>
+                            </div>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className={`w-full relative bg-gradient-to-r ${
+                  isDarkMode
+                    ? "from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                    : "from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
+                } text-white h-14 text-lg font-medium border-0 shadow-lg hover:shadow-xl transition-all duration-200`}
+              >
+                Invia Candidatura
+              </Button>
+            </form>
+          </Form>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+    </main>
+  )
 }
