@@ -13,6 +13,105 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Moon, Sun, User, Mail, Phone, MapPin, School, Briefcase, Users, FileText, Upload } from 'lucide-react'
 
+const province = [
+  "Agrigento",
+  "Alessandria",
+  "Ancona",
+  "Aosta",
+  "Arezzo",
+  "Ascoli Piceno",
+  "Asti",
+  "Avellino",
+  "Bari",
+  "Barletta-Andria-Trani",
+  "Belluno",
+  "Benevento",
+  "Bergamo",
+  "Biella",
+  "Bologna",
+  "Bolzano",
+  "Brescia",
+  "Brindisi",
+  "Cagliari",
+  "Caltanissetta",
+  "Campobasso",
+  "Catania",
+  "Catanzaro",
+  "Chieti",
+  "Como",
+  "Cosenza",
+  "Cremona",
+  "Crotone",
+  "Cuneo",
+  "Enna",
+  "Fermo",
+  "Ferrara",
+  "Firenze",
+  "Foggia",
+  "Forlì-Cesena",
+  "Frosinone",
+  "Genova",
+  "Gorizia",
+  "Grosseto",
+  "Imperia",
+  "Isernia",
+  "La Spezia",
+  "L'Aquila",
+  "Latina",
+  "Lecce",
+  "Lecco",
+  "Livorno",
+  "Lodi",
+  "Lucca",
+  "Macerata",
+  "Mantova",
+  "Massa-Carrara",
+  "Matera",
+  "Messina",
+  "Milano",
+  "Modena",
+  "Napoli",
+  "Novara",
+  "Nuoro",
+  "Oristano",
+  "Padova",
+  "Palermo",
+  "Parma",
+  "Pavia",
+  "Perugia",
+  "Pesaro e Urbino",
+  "Pescara",
+  "Piacenza",
+  "Pisa",
+  "Pistoia",
+  "Pordenone",
+  "Potenza",
+  "Prato",
+  "Ragusa",
+  "Ravenna",
+  "Reggio Calabria",
+  "Reggio Emilia",
+  "Rieti",
+  "Rimini",
+  "Roma",
+  "Rovigo",
+  "Salerno",
+  "Sassari",
+  "Savona",
+  "Siena",
+  "Siracusa",
+  "Sondrio",
+  "Taranto",
+  "Teramo",
+  "Terni",
+  "Torino",
+  "Trapani",
+  "Trento",
+  "Vibo Valentia",
+  "Vicenza",
+  "Viterbo"
+]
+
 const formSchema = z.object({
   // Personal Information
   email: z.string().email({ message: "Inserisci un indirizzo email valido." }),
@@ -77,7 +176,7 @@ export default function ApplicationForm() {
     try {
       // Crea un oggetto FormData per inviare anche i file
       const formData = new FormData();
-      
+
       // Aggiungi tutti i campi al FormData
       Object.entries(values).forEach(([key, value]) => {
         // Gestisci il file separatamente
@@ -87,15 +186,15 @@ export default function ApplicationForm() {
           formData.append(key, value.toString());
         }
       });
-      
+
       // Invia i dati all'API
       const response = await fetch('/api/submit-application', {
         method: 'POST',
         body: formData,
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         router.push('/success');
       } else {
@@ -107,11 +206,10 @@ export default function ApplicationForm() {
     }
   }
 
-  const inputStyles = `px-4 h-12 text-lg ${
-    isDarkMode
+  const inputStyles = `px-4 h-12 text-lg ${isDarkMode
       ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
       : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
-  } backdrop-blur-sm transition-all duration-200`
+    } backdrop-blur-sm transition-all duration-200`
 
   const labelStyles = `text-lg mb-2 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
 
@@ -131,11 +229,10 @@ export default function ApplicationForm() {
       {/* Dark mode toggle */}
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors ${
-          isDarkMode
+        className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors ${isDarkMode
             ? "bg-purple-800 text-yellow-200"
             : "bg-white/30 backdrop-blur-sm text-purple-700 hover:bg-white/40"
-        }`}
+          }`}
         aria-label="Toggle dark mode"
       >
         {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -150,9 +247,6 @@ export default function ApplicationForm() {
             <p className={`text-xl ${isDarkMode ? "text-purple-200" : "text-purple-700"}`}>
               Unisciti al nostro team e fai la differenza
             </p>
-            <div className={`text-sm ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>
-              Versione 10.0
-            </div>
           </div>
 
           <Form {...form}>
@@ -240,11 +334,10 @@ export default function ApplicationForm() {
                             />
                             <label
                               htmlFor="resume-upload"
-                              className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer ${
-                                isDarkMode
+                              className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer ${isDarkMode
                                   ? "bg-purple-800 hover:bg-purple-700 text-white"
                                   : "bg-purple-100 hover:bg-purple-200 text-purple-700"
-                              }`}
+                                }`}
                             >
                               <Upload className="w-5 h-5" /> Scegli File
                             </label>
@@ -287,9 +380,20 @@ export default function ApplicationForm() {
                         <FormLabel className={labelStyles}>
                           <MapPin className="w-5 h-5" /> Residenza
                         </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Il tuo indirizzo di residenza" {...field} className={inputStyles} />
-                        </FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la tua provincia" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {province.map(provincia => (
+                              <SelectItem key={provincia} value={provincia.toString()}>
+                                {provincia}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -300,9 +404,20 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
                         <FormLabel className={labelStyles}>Domicilio</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Il tuo indirizzo di domicilio" {...field} className={inputStyles} />
-                        </FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la tua provincia" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {province.map(provincia => (
+                              <SelectItem key={provincia} value={provincia.toString()}>
+                                {provincia}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -349,7 +464,7 @@ export default function ApplicationForm() {
                       <FormItem>
                         <FormLabel className={labelStyles}>Corso</FormLabel>
                         <FormControl>
-                          <Input placeholder="Il tuo corso" {...field} className={inputStyles} />
+                          <Input placeholder="Il tuo corso di laurea" {...field} className={inputStyles} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -361,18 +476,9 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={labelStyles}>Tipo di Curriculum</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className={inputStyles}>
-                              <SelectValue placeholder="Seleziona il tipo di curriculum" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="bachelor">Laurea Triennale</SelectItem>
-                            <SelectItem value="master">Laurea Magistrale</SelectItem>
-                            <SelectItem value="phd">Dottorato</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <Input placeholder="Il tipo di curriculum del tuo corso" {...field} className={inputStyles} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -423,10 +529,11 @@ export default function ApplicationForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="marketing">Marketing</SelectItem>
-                            <SelectItem value="hr">Risorse Umane</SelectItem>
-                            <SelectItem value="it">Information Technology</SelectItem>
-                            <SelectItem value="finance">Finanza</SelectItem>
+                            <SelectItem value="da">Data & Automation</SelectItem>
+                            <SelectItem value="bd">Business Development</SelectItem>
+                            <SelectItem value="mc">Marketing & Communication</SelectItem>
+                            <SelectItem value="hr">Human Resources</SelectItem>
+                            <SelectItem value="legal">Legal</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -446,10 +553,11 @@ export default function ApplicationForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="marketing">Marketing</SelectItem>
-                            <SelectItem value="hr">Risorse Umane</SelectItem>
-                            <SelectItem value="it">Information Technology</SelectItem>
-                            <SelectItem value="finance">Finanza</SelectItem>
+                            <SelectItem value="da">Data & Automation</SelectItem>
+                            <SelectItem value="bd">Business Development</SelectItem>
+                            <SelectItem value="mc">Marketing & Communication</SelectItem>
+                            <SelectItem value="hr">Human Resources</SelectItem>
+                            <SelectItem value="legal">Legal</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -583,11 +691,10 @@ export default function ApplicationForm() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className={`w-full relative bg-gradient-to-r ${
-                  isDarkMode
+                className={`w-full relative bg-gradient-to-r ${isDarkMode
                     ? "from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
                     : "from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
-                } text-white h-14 text-lg font-medium border-0 shadow-lg hover:shadow-xl transition-all duration-200`}
+                  } text-white h-14 text-lg font-medium border-0 shadow-lg hover:shadow-xl transition-all duration-200`}
               >
                 Invia Candidatura
               </Button>
