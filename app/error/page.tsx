@@ -61,7 +61,7 @@ export default function ErrorPage() {
               </Button>
             </Link>
             
-            <Link href="mailto:support@jesap.it" passHref>
+            <Link href="mailto:hr@jesap.it" passHref>
               <Button 
                 variant="outline"
                 className={`px-6 py-4 ${
