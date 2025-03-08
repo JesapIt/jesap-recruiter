@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Moon, Sun, User, Mail, Phone, MapPin, School, Briefcase, Users, FileText, Upload } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 const province = [
   "Agrigento",
@@ -121,9 +122,7 @@ const formSchema = z.object({
   phone: z.string().min(1, { message: "Il numero di telefono è obbligatorio" }),
   residency: z.string().min(1, { message: "La residenza è obbligatoria" }),
   domiciliation: z.string().min(1, { message: "Il domicilio è obbligatorio" }),
-  resume: z.any().refine((file) => file !== undefined, {
-    message: "Il curriculum è obbligatorio.",
-  }),
+  resume: z.any().optional(),
 
   // Academic Information
   university: z.string().min(1, { message: "L'università è obbligatoria" }),
@@ -141,11 +140,16 @@ const formSchema = z.object({
   why_jesap: z.string().min(1, { message: "Spiegaci dove hai sentito parlare di JESAP" }),
   why_area: z.string().min(10, { message: "Spiegaci perché hai scelto queste aree" }),
   know_someone: z.string().min(1, { message: "Seleziona se conosci qualcuno in JESAP" }),
-je_italy_member: z.string().min(1, { message: "Seleziona se fai parte di JE Italy" }),
-})
+  je_italy_member: z.string().min(1, { message: "Seleziona se fai parte di JE Italy" }),
+}).refine((data) => data.area_1 !== data.area_2, {
+  message: "Le due aree di preferenza devono essere diverse",
+  path: ["area_2"], // The error will be linked to `area_2`
+});
 
 export default function ApplicationForm() {
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -176,6 +180,8 @@ export default function ApplicationForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setIsSubmitting(true);
+
       // Crea un oggetto FormData per inviare anche i file
       const formData = new FormData();
 
@@ -200,18 +206,21 @@ export default function ApplicationForm() {
       if (result.success) {
         router.push('/success');
       } else {
-        router.push(`/error?message=${encodeURIComponent(result.message)}`);
+        router.push(`/error?errorMessage=${encodeURIComponent(result.message)}`);
       }
     } catch (error) {
       console.error("Errore durante l'invio del form:", error);
-      router.push('/error?message=Si%20è%20verificato%20un%20errore%20durante%20l%27invio%20del%20form');
+      router.push('/error?errorMessage=Si%20è%20verificato%20un%20errore%20durante%20l%27invio%20del%20form');
+    } finally {
+      setIsSubmitting(false); // AGGIUNTO: Resetta lo stato di invio
     }
+
   }
 
   const inputStyles = `w-full px-4 h-12 text-sm ${isDarkMode
-  ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
-  : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
-} backdrop-blur-sm transition-all duration-200`
+    ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
+    : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
+    } backdrop-blur-sm transition-all duration-200`
 
   const labelStyles = `text-lg mb-2 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
 
@@ -232,8 +241,8 @@ export default function ApplicationForm() {
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
         className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors ${isDarkMode
-            ? "bg-purple-800 text-yellow-200"
-            : "bg-white/30 backdrop-blur-sm text-purple-700 hover:bg-white/40"
+          ? "bg-purple-800 text-yellow-200"
+          : "bg-white/30 backdrop-blur-sm text-purple-700 hover:bg-white/40"
           }`}
         aria-label="Toggle dark mode"
       >
@@ -337,8 +346,8 @@ export default function ApplicationForm() {
                             <label
                               htmlFor="resume-upload"
                               className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer ${isDarkMode
-                                  ? "bg-purple-800 hover:bg-purple-700 text-white"
-                                  : "bg-purple-100 hover:bg-purple-200 text-purple-700"
+                                ? "bg-purple-800 hover:bg-purple-700 text-white"
+                                : "bg-purple-100 hover:bg-purple-200 text-purple-700"
                                 }`}
                             >
                               <Upload className="w-5 h-5" /> Scegli File
@@ -584,13 +593,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="online" id="jesap-online" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="online" id="jesap-online" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="jesap-online" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Online (Social Media, Sito Web, ecc.)
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="offline" id="jesap-offline" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="offline" id="jesap-offline" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="jesap-offline" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Offline (Eventi, Passaparola, ecc.)
                               </label>
@@ -640,13 +649,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="know-yes" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="yes" id="know-yes" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="know-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Sì
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="know-no" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="no" id="know-no" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="know-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 No
                               </label>
@@ -666,13 +675,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="je-yes" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="yes" id="je-yes" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="je-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Sì
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="je-no" className={!isDarkMode ? "border border-purple-900" : ""}/>
+                              <RadioGroupItem value="no" id="je-no" className={!isDarkMode ? "border border-purple-900" : ""} />
                               <label htmlFor="je-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 No
                               </label>
@@ -690,11 +699,18 @@ export default function ApplicationForm() {
               <Button
                 type="submit"
                 className={`w-full relative bg-gradient-to-r ${isDarkMode
-                    ? "from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
-                    : "from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
+                  ? "from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                  : "from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
                   } text-white h-14 text-lg font-medium border-0 shadow-lg hover:shadow-xl transition-all duration-200`}
               >
-                Invia Candidatura
+                {isSubmitting ? ( // AGGIUNTO: Mostra indicatore di caricamento durante l'invio
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Invio in corso...
+                  </>
+                ) : (
+                  "Invia Candidatura"
+                )}
               </Button>
             </form>
           </Form>
