@@ -138,7 +138,7 @@ const formSchema = z.object({
 
   // JESAP Questions
   how_know_jesap: z.string().min(1, { message: "Seleziona come hai conosciuto JESAP" }),
-  why_jesap: z.string().min(10, { message: "Spiegaci perché vuoi unirti a JESAP" }),
+  why_jesap: z.string().min(1, { message: "Spiegaci perché vuoi unirti a JESAP" }),
   why_area: z.string().min(10, { message: "Spiegaci perché hai scelto queste aree" }),
   know_someone: z.string().min(1, { message: "Seleziona se conosci qualcuno in JESAP" }),
 je_italy_member: z.string().min(1, { message: "Seleziona se fai parte di JE Italy" }),
@@ -606,13 +606,9 @@ export default function ApplicationForm() {
                     name="why_jesap"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Perché vuoi unirti a JESAP?</FormLabel>
+                        <FormLabel className={labelStyles}>Specifica la fonte</FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Raccontaci la tua motivazione per unirti a JESAP"
-                            {...field}
-                            className={`${inputStyles} min-h-[100px]`}
-                          />
+                          <Input placeholder="Dicci dove ci hai trovati" {...field} className={inputStyles} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
