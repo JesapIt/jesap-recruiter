@@ -36,9 +36,6 @@ export default function SuccessPage() {
         </p>
         
         <div className="space-y-4">
-          <p className={`${isDarkMode ? "text-purple-300" : "text-purple-600"}`}>
-            Controlla la tua email per una conferma della candidatura.
-          </p>
           
           <Link href="/" passHref>
             <Button 
