@@ -32,7 +32,7 @@ export default function SuccessPage() {
         </h1>
         
         <p className={`text-xl mb-8 ${isDarkMode ? "text-purple-200" : "text-purple-700"}`}>
-          Grazie per aver inviato la tua candidatura a JESAP. Abbiamo ricevuto le tue informazioni e ti contatteremo presto.
+          Grazie per aver inviato la tua candidatura a JESAP. <br /> Abbiamo ricevuto le tue informazioni e ti contatteremo presto.
         </p>
         
         <div className="space-y-4">

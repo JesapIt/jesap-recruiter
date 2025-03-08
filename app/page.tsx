@@ -662,7 +662,7 @@ export default function ApplicationForm() {
                     name="je_italy_member"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Sei un membro di JE Italy?</FormLabel>
+                        <FormLabel className={labelStyles}>Conosci il network delle JE?</FormLabel>
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
