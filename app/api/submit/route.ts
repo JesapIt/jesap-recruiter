@@ -28,7 +28,7 @@ const applicationSchema = z.object({
 
     // JESAP Questions
     how_know_jesap: z.string().min(1, { message: "Seleziona come hai conosciuto JESAP" }),
-    why_jesap: z.string().min(10, { message: "Spiegaci perché vuoi unirti a JESAP" }),
+    why_jesap: z.string().min(1, { message: "Spiegaci dove hai sentito parlare di JESAP" }),
     why_area: z.string().min(10, { message: "Spiegaci perché hai scelto queste aree" }),
     know_someone: z.string(),
     je_italy_member: z.string(),
