@@ -188,7 +188,7 @@ export default function ApplicationForm() {
       });
 
       // Invia i dati all'API
-      const response = await fetch('/api/submit-application', {
+      const response = await fetch('/api/submit', {
         method: 'POST',
         body: formData,
       });
@@ -206,10 +206,10 @@ export default function ApplicationForm() {
     }
   }
 
-  const inputStyles = `px-4 h-12 text-lg ${isDarkMode
-      ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
-      : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
-    } backdrop-blur-sm transition-all duration-200`
+  const inputStyles = `w-full px-4 h-12 text-sm ${isDarkMode
+  ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
+  : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
+} backdrop-blur-sm transition-all duration-200`
 
   const labelStyles = `text-lg mb-2 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
 
@@ -582,13 +582,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="online" id="jesap-online" />
+                              <RadioGroupItem value="online" id="jesap-online" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="jesap-online" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Online (Social Media, Sito Web, ecc.)
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="offline" id="jesap-offline" />
+                              <RadioGroupItem value="offline" id="jesap-offline" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="jesap-offline" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Offline (Eventi, Passaparola, ecc.)
                               </label>
@@ -642,13 +642,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="know-yes" />
+                              <RadioGroupItem value="yes" id="know-yes" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="know-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Sì
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="know-no" />
+                              <RadioGroupItem value="no" id="know-no" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="know-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 No
                               </label>
@@ -668,13 +668,13 @@ export default function ApplicationForm() {
                         <FormControl>
                           <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="je-yes" />
+                              <RadioGroupItem value="yes" id="je-yes" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="je-yes" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 Sì
                               </label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="je-no" />
+                              <RadioGroupItem value="no" id="je-no" className={!isDarkMode ? "border border-purple-900" : ""}/>
                               <label htmlFor="je-no" className={isDarkMode ? "text-white" : "text-purple-900"}>
                                 No
                               </label>
