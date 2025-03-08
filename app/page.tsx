@@ -121,7 +121,9 @@ const formSchema = z.object({
   phone: z.string().min(1, { message: "Il numero di telefono è obbligatorio" }),
   residency: z.string().min(1, { message: "La residenza è obbligatoria" }),
   domiciliation: z.string().min(1, { message: "Il domicilio è obbligatorio" }),
-  resume: z.any().optional(),
+  resume: z.any().refine((file) => file !== undefined, {
+    message: "Il curriculum è obbligatorio.",
+  }),
 
   // Academic Information
   university: z.string().min(1, { message: "L'università è obbligatoria" }),
@@ -138,8 +140,8 @@ const formSchema = z.object({
   how_know_jesap: z.string().min(1, { message: "Seleziona come hai conosciuto JESAP" }),
   why_jesap: z.string().min(10, { message: "Spiegaci perché vuoi unirti a JESAP" }),
   why_area: z.string().min(10, { message: "Spiegaci perché hai scelto queste aree" }),
-  know_someone: z.string(),
-  je_italy_member: z.string(),
+  know_someone: z.string().min(1, { message: "Seleziona se conosci qualcuno in JESAP" }),
+je_italy_member: z.string().min(1, { message: "Seleziona se fai parte di JE Italy" }),
 })
 
 export default function ApplicationForm() {
