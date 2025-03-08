@@ -122,13 +122,15 @@ const formSchema = z.object({
   phone: z.string().min(1, { message: "Il numero di telefono è obbligatorio" }),
   residency: z.string().min(1, { message: "La residenza è obbligatoria" }),
   domiciliation: z.string().min(1, { message: "Il domicilio è obbligatorio" }),
-  resume: z.any().optional(),
+  resume: z.any().refine((file) => file !== undefined, {
+    message: "Il curriculum è obbligatorio.",
+  }),
 
   // Academic Information
   university: z.string().min(1, { message: "L'università è obbligatoria" }),
   faculty: z.string().min(1, { message: "La facoltà è obbligatoria" }),
   course: z.string().min(1, { message: "Il corso è obbligatorio" }),
-  curriculum_type: z.string().min(1, { message: "Il tipo di curriculum è obbligatorio" }),
+  curriculum_type: z.string().optional(),
   course_year: z.string().min(1, { message: "L'anno di corso è obbligatorio" }),
 
   // Areas of Interest
