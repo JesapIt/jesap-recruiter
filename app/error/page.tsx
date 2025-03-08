@@ -46,7 +46,7 @@ export default function ErrorPage() {
         
         <div className="space-y-4">
           <p className={`${isDarkMode ? "text-purple-300" : "text-purple-600"}`}>
-            Puoi riprovare o contattare il supporto se il problema persiste.
+            Puoi riprovare o contattare il supporto alla mail <strong>hr@jesap.it</strong> se il problema persiste.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
