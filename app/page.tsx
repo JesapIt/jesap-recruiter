@@ -17,104 +17,11 @@ import { Loader2 } from 'lucide-react'
 // Importiamo la variabile isRecruitingSeason da un file condiviso
 import { isRecruitingSeason } from "@/lib/config"
 
-const province = [
-  "Agrigento",
-  "Alessandria",
-  "Ancona",
-  "Aosta",
-  "Arezzo",
-  "Ascoli Piceno",
-  "Asti",
-  "Avellino",
-  "Bari",
-  "Barletta-Andria-Trani",
-  "Belluno",
-  "Benevento",
-  "Bergamo",
-  "Biella",
-  "Bologna",
-  "Bolzano",
-  "Brescia",
-  "Brindisi",
-  "Cagliari",
-  "Caltanissetta",
-  "Campobasso",
-  "Catania",
-  "Catanzaro",
-  "Chieti",
-  "Como",
-  "Cosenza",
-  "Cremona",
-  "Crotone",
-  "Cuneo",
-  "Enna",
-  "Fermo",
-  "Ferrara",
-  "Firenze",
-  "Foggia",
-  "Forlì-Cesena",
-  "Frosinone",
-  "Genova",
-  "Gorizia",
-  "Grosseto",
-  "Imperia",
-  "Isernia",
-  "La Spezia",
-  "L'Aquila",
-  "Latina",
-  "Lecce",
-  "Lecco",
-  "Livorno",
-  "Lodi",
-  "Lucca",
-  "Macerata",
-  "Mantova",
-  "Massa-Carrara",
-  "Matera",
-  "Messina",
-  "Milano",
-  "Modena",
-  "Napoli",
-  "Novara",
-  "Nuoro",
-  "Oristano",
-  "Padova",
-  "Palermo",
-  "Parma",
-  "Pavia",
-  "Perugia",
-  "Pesaro e Urbino",
-  "Pescara",
-  "Piacenza",
-  "Pisa",
-  "Pistoia",
-  "Pordenone",
-  "Potenza",
-  "Prato",
-  "Ragusa",
-  "Ravenna",
-  "Reggio Calabria",
-  "Reggio Emilia",
-  "Rieti",
-  "Rimini",
-  "Roma",
-  "Rovigo",
-  "Salerno",
-  "Sassari",
-  "Savona",
-  "Siena",
-  "Siracusa",
-  "Sondrio",
-  "Taranto",
-  "Teramo",
-  "Terni",
-  "Torino",
-  "Trapani",
-  "Trento",
-  "Vibo Valentia",
-  "Vicenza",
-  "Viterbo"
-]
+// Importo le costanti
+import { province } from "@/lib/province"
+import { universita } from "@/lib/universita"
+import { facolta } from "@/lib/facolta"
+import { corsi } from "@/lib/corsi"
 
 const formSchema = z.object({
   // Personal Information
@@ -459,9 +366,20 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={labelStyles}>Università</FormLabel>
+                        <Select>
                         <FormControl>
-                          <Input placeholder="La tua università" {...field} className={inputStyles} />
-                        </FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la tua università" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {universita.map(ateneo => (
+                              <SelectItem key={ateneo} value={ateneo.toString()}>
+                                {ateneo}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -471,10 +389,21 @@ export default function ApplicationForm() {
                     name="faculty"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Facoltà</FormLabel>
+                        <FormLabel className={labelStyles}>Università</FormLabel>
+                        <Select>
                         <FormControl>
-                          <Input placeholder="La tua facoltà" {...field} className={inputStyles} />
-                        </FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona la tua facoltà" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {facolta.map(faculty => (
+                              <SelectItem key={faculty} value={faculty.toString()}>
+                                {faculty}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -484,10 +413,21 @@ export default function ApplicationForm() {
                     name="course"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Corso</FormLabel>
+                        <FormLabel className={labelStyles}>Università</FormLabel>
+                        <Select>
                         <FormControl>
-                          <Input placeholder="Il tuo corso di laurea" {...field} className={inputStyles} />
-                        </FormControl>
+                            <SelectTrigger className={inputStyles}>
+                              <SelectValue placeholder="Seleziona il tuo corso di laurea" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {corsi.map(corso => (
+                              <SelectItem key={corso} value={corso.toString()}>
+                                {corso}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -551,11 +491,11 @@ export default function ApplicationForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="da">Data & Automation</SelectItem>
-                            <SelectItem value="bd">Business Development</SelectItem>
-                            <SelectItem value="mc">Marketing & Communication</SelectItem>
-                            <SelectItem value="hr">Human Resources</SelectItem>
-                            <SelectItem value="legal">Legal</SelectItem>
+                            <SelectItem value="Data & Automation">Data & Automation</SelectItem>
+                            <SelectItem value="Business Development">Business Development</SelectItem>
+                            <SelectItem value="Marketing & Communication">Marketing & Communication</SelectItem>
+                            <SelectItem value="Human Resources">Human Resources</SelectItem>
+                            <SelectItem value="Legal">Legal</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -575,11 +515,11 @@ export default function ApplicationForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="da">Data & Automation</SelectItem>
-                            <SelectItem value="bd">Business Development</SelectItem>
-                            <SelectItem value="mc">Marketing & Communication</SelectItem>
-                            <SelectItem value="hr">Human Resources</SelectItem>
-                            <SelectItem value="legal">Legal</SelectItem>
+                            <SelectItem value="Data & Automation">Data & Automation</SelectItem>
+                            <SelectItem value="Business Development">Business Development</SelectItem>
+                            <SelectItem value="Marketing & Communication">Marketing & Communication</SelectItem>
+                            <SelectItem value="Human Resources">Human Resources</SelectItem>
+                            <SelectItem value="Legal">Legal</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
