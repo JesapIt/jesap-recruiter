@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -13,6 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Moon, Sun, User, Mail, Phone, MapPin, School, Briefcase, Users, FileText, Upload } from 'lucide-react'
 import { Loader2 } from 'lucide-react'
+
+// Variabile che controlla se il periodo di reclutamento è aperto
+const isRecruitingSeason = true; // Imposta a false per reindirizzare alla pagina "closed-season"
 
 const province = [
   "Agrigento",
@@ -151,8 +154,14 @@ const formSchema = z.object({
 export default function ApplicationForm() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const router = useRouter()
+
+  // Controlla se il periodo di reclutamento è aperto e reindirizza se necessario
+  useEffect(() => {
+    if (!isRecruitingSeason) {
+      router.push("/closed-season")
+    }
+  }, [router])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
