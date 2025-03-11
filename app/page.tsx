@@ -14,8 +14,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Moon, Sun, User, Mail, Phone, MapPin, School, Briefcase, Users, FileText, Upload } from 'lucide-react'
 import { Loader2 } from 'lucide-react'
 
-// Variabile che controlla se il periodo di reclutamento è aperto
-const isRecruitingSeason = true; // Imposta a false per reindirizzare alla pagina "closed-season"
+// Importiamo la variabile isRecruitingSeason da un file condiviso
+import { isRecruitingSeason } from "@/lib/config"
 
 const province = [
   "Agrigento",

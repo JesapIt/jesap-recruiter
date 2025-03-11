@@ -1,12 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Instagram, Facebook, Linkedin, Calendar, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+// Importiamo la variabile isRecruitingSeason da un file condiviso
+import { isRecruitingSeason } from "@/lib/config"
 
 export default function ClosedSeasonPage() {
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const router = useRouter()
+
+  // Controlla se il periodo di reclutamento è aperto e reindirizza alla home page
+  useEffect(() => {
+    if (isRecruitingSeason) {
+      router.push("/")
+    }
+  }, [router])
+
+  // Se il periodo di reclutamento è aperto, mostra un componente vuoto
+  // (il reindirizzamento avverrà tramite useEffect)
+  if (isRecruitingSeason) {
+    return null
+  }
 
   return (
     <main
