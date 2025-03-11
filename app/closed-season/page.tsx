@@ -54,7 +54,7 @@ export default function ClosedSeasonPage() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <Link href="https://instagram.com/jesap" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.instagram.com/jesap_consulting/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 className={`flex items-center gap-2 ${
@@ -67,7 +67,7 @@ export default function ClosedSeasonPage() {
               </Button>
             </Link>
 
-            <Link href="https://facebook.com/jesap" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.facebook.com/jesaproma/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 className={`flex items-center gap-2 ${
@@ -80,7 +80,7 @@ export default function ClosedSeasonPage() {
               </Button>
             </Link>
 
-            <Link href="https://linkedin.com/company/jesap" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.linkedin.com/company/jesap-junior-enterprise-sapienza/" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 className={`flex items-center gap-2 ${
