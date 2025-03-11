@@ -366,7 +366,7 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={labelStyles}>Università</FormLabel>
-                        <Select>
+                        <Select  onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger className={inputStyles}>
                               <SelectValue placeholder="Seleziona la tua università" />
@@ -390,7 +390,7 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={labelStyles}>Università</FormLabel>
-                        <Select>
+                        <Select  onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger className={inputStyles}>
                               <SelectValue placeholder="Seleziona la tua facoltà" />
@@ -414,7 +414,7 @@ export default function ApplicationForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={labelStyles}>Università</FormLabel>
-                        <Select>
+                        <Select  onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger className={inputStyles}>
                               <SelectValue placeholder="Seleziona il tuo corso di laurea" />
