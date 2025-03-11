@@ -83,7 +83,7 @@ export default function ClosedSeasonPage() {
           >
             <p className="text-sm">
               Il prossimo periodo di reclutamento è previsto per Settembre 2025. Seguici sui social per non perdere
-              l'opportunità!
+              l&apos;opportunità!
             </p>
           </div>
         </div>
