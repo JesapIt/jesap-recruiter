@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Download, Search, Loader2, FileText, Moon, Sun, Check, X } from 'lucide-react'
-import type { Candidato } from "@/types/candidato"
+import type { Candidato } from "@/types/applicant"
 
 export default function ApplicationsPage() {
   const [candidati, setCandidati] = useState<Candidato[]>([])
