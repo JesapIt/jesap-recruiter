@@ -135,18 +135,18 @@ export default function ApplicationForm() {
 
   }
 
-  const inputStyles = `w-full px-4 h-12 text-sm ${isDarkMode
+  const inputStyles = `w-full px-4 h-12 text-sm transition-colors duration-300 ${isDarkMode
     ? "bg-purple-900/50 border-purple-700 text-white placeholder:text-purple-400"
     : "bg-white/70 border-purple-200 focus-visible:ring-purple-500"
     } backdrop-blur-sm transition-all duration-200`
 
-  const labelStyles = `text-lg mb-2 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
+  const labelStyles = `text-lg mb-2 transition-colors duration-300 ${isDarkMode ? "text-purple-200" : "text-purple-800"} flex items-center gap-2`
 
-  const sectionStyles = `text-2xl font-semibold mb-6 ${isDarkMode ? "text-purple-100" : "text-purple-800"}`
+  const sectionStyles = `text-2xl font-semibold mb-6 transition-colors duration-300 ${isDarkMode ? "text-purple-100" : "text-purple-800"}`
 
   return (
     <main
-      className={`min-h-screen ${isDarkMode ? "dark bg-purple-950" : "bg-gradient-to-br from-purple-50 to-indigo-100"}`}
+      className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "dark bg-purple-950" : "bg-gradient-to-br from-purple-50 to-indigo-100"}`}
     >
       {/* Background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -158,7 +158,7 @@ export default function ApplicationForm() {
       {/* Dark mode toggle */}
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors ${isDarkMode
+        className={`fixed top-6 right-6 p-3 rounded-full z-10 transition-colors duration-300 ${isDarkMode
           ? "bg-purple-800 text-yellow-200"
           : "bg-white/30 backdrop-blur-sm text-purple-700 hover:bg-white/40"
           }`}
@@ -263,7 +263,7 @@ export default function ApplicationForm() {
                             />
                             <label
                               htmlFor="resume-upload"
-                              className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer ${isDarkMode
+                              className={`flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer transition-colors duration-300 ${isDarkMode
                                 ? "bg-purple-800 hover:bg-purple-700 text-white"
                                 : "bg-purple-100 hover:bg-purple-200 text-purple-700"
                                 }`}
