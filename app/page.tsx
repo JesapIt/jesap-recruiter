@@ -389,7 +389,7 @@ export default function ApplicationForm() {
                     name="faculty"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Università</FormLabel>
+                        <FormLabel className={labelStyles}>Facoltà</FormLabel>
                         <Select  onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger className={inputStyles}>
@@ -413,7 +413,7 @@ export default function ApplicationForm() {
                     name="course"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyles}>Università</FormLabel>
+                        <FormLabel className={labelStyles}>Corso</FormLabel>
                         <Select  onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                             <SelectTrigger className={inputStyles}>
