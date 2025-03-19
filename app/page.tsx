@@ -458,11 +458,11 @@ export default function ApplicationForm() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="1">1° Anno</SelectItem>
-                            <SelectItem value="2">2° Anno</SelectItem>
-                            <SelectItem value="3">3° Anno</SelectItem>
-                            <SelectItem value="4">4° Anno</SelectItem>
-                            <SelectItem value="5">5° Anno</SelectItem>
+                            <SelectItem value="1">1° Anno (1° Triennale)</SelectItem>
+                            <SelectItem value="2">2° Anno (2° Triennale)</SelectItem>
+                            <SelectItem value="3">3° Anno (3° Triennale)</SelectItem>
+                            <SelectItem value="4">4° Anno (1° Magistrale)</SelectItem>
+                            <SelectItem value="5">5° Anno (2° Magistrale)</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
