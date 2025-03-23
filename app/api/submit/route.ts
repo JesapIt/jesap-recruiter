@@ -166,6 +166,21 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
         console.error("Error processing the request:", error);
+
+        // Insert the validated form data into Supabase
+        const { data: insertedData, error: dbError2 } = await supabase
+            .from('errori') // Make sure this table exists in your Supabase database
+            .insert([
+                {
+                    'errore': String(error),
+                }
+            ]);
+
+        if (dbError2) {
+            console.error("Error inserting data into Supabase:", dbError2.message);
+            return NextResponse.json({ success: false, message: "Errore durante l'inserimento dei dati" }, { status: 500 });
+        }
+
         return NextResponse.json(
             {
                 success: false,
