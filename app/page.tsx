@@ -32,7 +32,7 @@ const formSchema = z.object({
   phone: z.string().min(1, { message: "Il numero di telefono è obbligatorio" }),
   residency: z.string().min(1, { message: "La residenza è obbligatoria" }),
   domiciliation: z.string().min(1, { message: "Il domicilio è obbligatorio" }),
-  resume: z.any().refine((file) => file !== undefined, {
+  resume: z.any().refine((file) => file !== undefined && file !== null, {
     message: "Il curriculum è obbligatorio.",
   }),
 
